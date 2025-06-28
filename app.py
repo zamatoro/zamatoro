@@ -18,69 +18,144 @@ MAIN_HTML = """
     <meta charset="UTF-8">
     <title>Тренажёр для юристов</title>
     <style>
-        body { font-family: Arial, sans-serif; max-width: 900px; margin: 0 auto; background: #f7f7f7; }
-        h1, h2 { text-align: center; }
-        .question-block { background: #fff; padding: 24px; border-radius: 16px; margin-top: 24px; }
-        .option { margin: 8px 0; padding: 8px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; }
-        .option.correct { background: #b1ffcb; }
-        .option.incorrect { background: #ffd4d4; }
-        .btn { margin: 8px 2px; padding: 8px 20px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; }
-        .btn-main { background: #008080; color: #fff; }
-        .btn-gray { background: #ccc; color: #333; }
-        .topics-list > div { display:flex;align-items:center;justify-content:space-between; }
-        .result { font-size: 1.2em; margin-top: 24px; text-align: center; }
-        .qnav-row {
-            display: flex;
-            gap: 7px;
-            margin: 7px 0 10px 0;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: flex-start;
-        }
-        .qnav-page {
-            font-size: 10pt;
-            width: 30px;
-            height: 30px;
-            border-radius: 16px;
-            background: #f3f4f6;
-            color: #333;
-            text-align: center;
-            line-height: 30px;
-            cursor: pointer;
-            font-weight: bold;
-            border: none;
-            display: inline-block;
-            transition: all 0.15s;
-            user-select: none;
-            margin-right: 1px;
-        }
-        .qnav-page.current {
-            background: #118387;
-            color: #fff;
-            font-weight: bold;
-        }
-        .qnav-page.done {
-            background: #d1fae5;
-            color: #008080;
-        }
-        .qnav-page.wrong {
-            background: #ffeaea;
-            color: #d11a1a;
-            border: 1.5px solid #ffb6b6;
-        }
-        .qnav-dots {
-            font-size: 13pt;
-            padding: 0 4px;
-            color: #888;
-            user-select: none;
-        }
-        .option b {
-            margin-right: 8px;
-            font-size: 11pt;
-            min-width: 22px;
-            text-align: center;
-            display: inline-block;
-        }
+body {
+    font-family: Arial, sans-serif;
+    max-width: 900px;
+    margin: 0 auto;
+    background: #f7f7f7;
+}
+h1, h2 { text-align: center; }
+.question-block {
+    background: #fff;
+    padding: 24px;
+    border-radius: 16px;
+    margin-top: 24px;
+    box-sizing: border-box;
+}
+.option {
+    margin: 8px 0;
+    padding: 12px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    font-size: 1.13em;
+}
+.option.correct { background: #b1ffcb; }
+.option.incorrect { background: #ffd4d4; }
+.btn {
+    margin: 8px 2px;
+    padding: 12px 22px;
+    border-radius: 8px;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 1.08em;
+}
+.btn-main { background: #008080; color: #fff; }
+.btn-gray { background: #ccc; color: #333; }
+.topics-list > div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 1em;
+}
+.result {
+    font-size: 1.17em;
+    margin-top: 24px;
+    text-align: center;
+}
+.qnav-row {
+    display: flex;
+    gap: 7px;
+    margin: 10px 0 13px 0;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: flex-start;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+.qnav-page {
+    font-size: 1em;
+    min-width: 34px;
+    height: 34px;
+    border-radius: 17px;
+    background: #f3f4f6;
+    color: #333;
+    text-align: center;
+    line-height: 34px;
+    cursor: pointer;
+    font-weight: bold;
+    border: none;
+    display: inline-block;
+    transition: all 0.15s;
+    user-select: none;
+    margin-right: 2px;
+}
+.qnav-page.current {
+    background: #118387;
+    color: #fff;
+    font-weight: bold;
+}
+.qnav-page.done {
+    background: #d1fae5;
+    color: #008080;
+}
+.qnav-page.wrong {
+    background: #ffeaea;
+    color: #d11a1a;
+    border: 1.5px solid #ffb6b6;
+}
+.qnav-dots {
+    font-size: 1.2em;
+    padding: 0 4px;
+    color: #888;
+    user-select: none;
+}
+.option b {
+    margin-right: 10px;
+    font-size: 1.08em;
+    min-width: 22px;
+    text-align: center;
+    display: inline-block;
+}
+@media (max-width: 600px) {
+    body {
+        max-width: 100vw;
+        font-size: 1em;
+        padding: 0;
+        margin: 0;
+        background: #f7f7f7;
+    }
+    .question-block {
+        padding: 12px 6px 18px 6px;
+        margin-top: 5vw;
+        border-radius: 10px;
+    }
+    .btn, .btn-main, .btn-gray {
+        width: 100%;
+        margin: 9px 0;
+        padding: 15px 0;
+        font-size: 1.06em;
+    }
+    .topics-list > div {
+        font-size: 0.98em;
+    }
+    .qnav-row {
+        gap: 4px;
+        margin-bottom: 10px;
+        padding-bottom: 3px;
+    }
+    .qnav-page, .qnav-page.current, .qnav-page.done, .qnav-page.wrong {
+        min-width: 28px;
+        height: 28px;
+        font-size: 0.99em;
+        border-radius: 14px;
+        line-height: 28px;
+        margin-right: 1.5px;
+    }
+    .option { font-size: 1em; padding: 10px 7px; }
+}
     </style>
 </head>
 <body>
@@ -96,9 +171,8 @@ let mode = null;
 let errors = [];
 let sessionResult = {};
 let navHistory = [];
-let wrongAnswers = [];  // <-- Новое: массив с ошибками по вопросам текущей сессии
+let wrongAnswers = [];  // Массив с ошибками по вопросам текущей сессии
 
-// --- СЧЁТЧИК ПРАВИЛЬНЫХ ОТВЕТОВ ПО ТЕМАМ ---
 function getTopicStats() {
     return JSON.parse(localStorage.getItem("topicStats") || "{}");
 }
@@ -184,19 +258,16 @@ function startErrors() {
     showQuestion(true);
 }
 
-// --- ФУНКЦИЯ ПРОДВИНУТОЙ ПАГИНАЦИИ ---
 function showQuestion(push=true) {
     if (push) navHistory.push("showQuestion");
     if(currentIdx >= currentQuestions.length) { showResult(true); return; }
     let q = currentQuestions[currentIdx];
 
-    // --- Продвинутая пагинация ---
     let total = currentQuestions.length;
     let current = currentIdx;
     let pagination = '';
     let maxShown = 15;
 
-    // Левая стрелка
     pagination += `<span class="qnav-page" onclick="gotoQuestion(${Math.max(0, current-1)})" ${current===0?'style="opacity:0.5;pointer-events:none"':''}>&lt;</span>`;
 
     let shown = [];
@@ -222,10 +293,8 @@ function showQuestion(push=true) {
             pagination += `<span class="${cls}" onclick="gotoQuestion(${idx})">${idx+1}</span>`;
         }
     }
-    // Правая стрелка
     pagination += `<span class="qnav-page" onclick="gotoQuestion(${Math.min(total-1, current+1)})" ${current===total-1?'style="opacity:0.5;pointer-events:none"':''}>&gt;</span>`;
 
-    // --- Варианты с буквами ---
     let letters = ['а', 'б', 'в', 'г', 'д', 'е', 'ж', 'з', 'и', 'к', 'л'];
     let opts = q.options.map((opt, i) => {
         let cls = "";
@@ -245,8 +314,8 @@ function showQuestion(push=true) {
         <button class="btn btn-main" onclick="nextOrSubmit()">${userAnswers[currentIdx]!==null ? 'Далее' : 'Ответить'}</button>
     </div>`;
     document.getElementById('app').innerHTML = `
-    <div style="display:flex; gap:20px;">
-      <div class="question-block" style="flex:1;">
+    <div style="display:flex; gap:20px; flex-wrap:wrap;">
+      <div class="question-block" style="flex:1; min-width:0;">
         <div><b>Тема:</b> ${q.topic}</div>
         <div class="qnav-row" style="margin-bottom:13px;">${pagination}</div>
         <div style="margin:16px 0 8px"><b>${q.question}</b></div>
@@ -261,11 +330,10 @@ function gotoQuestion(idx) {
     showQuestion(false);
 }
 function chooseOption(i) {
-    if(userAnswers[currentIdx]!==null) return; // уже отвечено
+    if(userAnswers[currentIdx]!==null) return;
     userAnswers[currentIdx] = i;
     let q = currentQuestions[currentIdx];
     let correctIdx = q.options.findIndex(opt => opt.startsWith('+'));
-    // --- Запоминаем неправильные ответы для навигации ---
     wrongAnswers[currentIdx] = (i !== correctIdx);
     if(i !== correctIdx && mode !== "errors") {
         let id = allQuestions.findIndex(x => x.question === q.question && x.topic === q.topic);
@@ -310,20 +378,17 @@ function showResult(push=true) {
             <button class="btn btn-gray" onclick="mainMenu(true)">На главную</button>
         </div>
     `;
-    // --- После режима "errors" удаляем правильно отвеченные из errors ---
     if(mode === "errors" && questionsToRemoveFromErrors.length > 0) {
-        // удалить вопросы по id (по совпадению вопроса и темы)
         let idsToRemove = questionsToRemoveFromErrors.map(idx => {
             let q = currentQuestions[idx];
             return allQuestions.findIndex(x => x.question === q.question && x.topic === q.topic);
         });
         errors = errors.filter(q => !idsToRemove.includes(allQuestions.findIndex(x => x.question === q.question && x.topic === q.topic)));
     }
-    // После экзамена/тренировки обновляем errors (оставляем только неверные)
     if(mode === "exam" || mode === "train") {
         errors = [];
         currentQuestions.forEach((q, idx) => {
-            let correctIdx = q.options.findIndex(opt => opt.startsWith('+'));
+            let correctIdx = q.options.findIndex(opt => opt.startswith('+'));
             if(userAnswers[idx] !== correctIdx) {
                 let id = allQuestions.findIndex(x => x.question === q.question && x.topic === q.topic);
                 if(!errors.includes(allQuestions[id])) errors.push(allQuestions[id]);
@@ -332,7 +397,6 @@ function showResult(push=true) {
     }
 }
 function onErrorsResult() {
-    // Обновить список errors (после showResult) и вернуться в меню
     mainMenu(true);
 }
 function goBack() {
@@ -361,8 +425,6 @@ def index():
 @app.route("/questions")
 def questions():
     return jsonify(all_questions)
-
-import os
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
