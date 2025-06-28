@@ -1,5 +1,6 @@
 import json
 from flask import Flask, render_template_string, jsonify
+import os
 
 app = Flask(__name__)
 app.secret_key = "lawyer_test_secret_key"
@@ -360,6 +361,8 @@ def index():
 @app.route("/questions")
 def questions():
     return jsonify(all_questions)
+
+import os
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
