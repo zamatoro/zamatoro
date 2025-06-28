@@ -16,54 +16,161 @@ MAIN_HTML = """
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Тренажёр для юристов</title>
+    <title>Юридический тренажёр</title>
     <style>
 body {
+    background: #c68b3e;
+    background-image: repeating-linear-gradient(45deg,#e7b46b 0 8px,transparent 8px 16px), repeating-linear-gradient(-45deg,#e0a858 0 10px,transparent 10px 20px);
+    min-height: 100vh;
     font-family: Arial, sans-serif;
-    max-width: 900px;
-    margin: 0 auto;
-    background: #f7f7f7;
 }
 h1, h2 { text-align: center; }
-.question-block {
-    background: #fff;
-    padding: 24px;
+.main-screen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 97vh;
+}
+.main-card {
+    background: #a25628d9;
+    border-radius: 32px;
+    padding: 38px 32px 36px 32px;
+    box-shadow: 0 4px 24px #2d180812;
+    min-width: 335px;
+    max-width: 96vw;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    position: relative;
+}
+.main-icon {
+    font-size: 40px;
+    color: #fff;
+    margin-bottom: 12px;
+    align-self: center;
+}
+.main-title {
+    font-size: 2.3em;
+    font-weight: bold;
+    color: #fff;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+    line-height: 1.08em;
+    text-align: left;
+}
+.main-subtitle {
+    font-size: 1.2em;
+    color: #fff9;
+    margin-bottom: 24px;
+    line-height: 1.24em;
+}
+.main-modes {
+    background: #7e3f15e0;
     border-radius: 16px;
-    margin-top: 24px;
-    box-sizing: border-box;
+    padding: 20px 24px 20px 24px;
+    align-self: flex-end;
+    width: 260px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 12px #2d18081a;
+}
+.modes-title {
+    color: #fff;
+    font-size: 1.25em;
+    font-weight: bold;
+    margin-bottom: 18px;
+    letter-spacing: 0.5px;
+}
+.main-btn {
+    background: #b2652d;
+    color: #fff;
+    border: none;
+    font-size: 1.13em;
+    border-radius: 12px;
+    padding: 13px 16px 13px 0;
+    margin-bottom: 12px;
+    width: 100%;
+    text-align: left;
+    font-weight: bold;
+    box-shadow: 0 2px 10px #42250611;
+    transition: background 0.13s;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.main-btn:last-child { margin-bottom: 0; }
+.main-btn:hover {
+    background: #cd8946;
+}
+.main-btn-icon {
+    font-size: 1.28em;
+    margin-left: 15px;
+}
+.main-version {
+    position: absolute;
+    left: 36px;
+    bottom: 16px;
+    color: #fff7;
+    font-size: 1.11em;
+    letter-spacing: 1.5px;
+}
+.question-block {
+    background: #fffbeedc;
+    border-radius: 24px;
+    padding: 25px 20px 18px 20px;
+    box-shadow: 0 2px 12px #42250611;
+    margin: 26px auto 0 auto;
+    max-width: 490px;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
 }
 .option {
-    margin: 8px 0;
-    padding: 12px 12px;
-    border-radius: 8px;
+    margin: 10px 0;
+    padding: 15px 12px;
+    border-radius: 10px;
     cursor: pointer;
     display: flex;
     align-items: center;
     font-size: 1.13em;
+    background: #fff8;
+    border: 1.5px solid transparent;
+    transition: background 0.14s, border 0.14s;
 }
-.option.correct { background: #b1ffcb; }
-.option.incorrect { background: #ffd4d4; }
-.btn {
-    margin: 8px 2px;
+.option.correct { background: #d1ffde; border: 1.5px solid #69dd87;}
+.option.incorrect { background: #ffdede; border: 1.5px solid #f99393;}
+.option b {
+    margin-right: 12px;
+    font-size: 1.08em;
+    min-width: 23px;
+    text-align: center;
+    display: inline-block;
+}
+.btn, .btn-main, .btn-gray {
+    margin: 10px 2px 0 0;
     padding: 12px 22px;
-    border-radius: 8px;
+    border-radius: 9px;
     border: none;
     font-weight: bold;
     cursor: pointer;
-    font-size: 1.08em;
+    font-size: 1.10em;
+    background: #b2652d;
+    color: #fff;
+    transition: background 0.14s;
 }
-.btn-main { background: #008080; color: #fff; }
-.btn-gray { background: #ccc; color: #333; }
+.btn-main { background: #b2652d; color: #fff; }
+.btn-gray { background: #cfd2d7; color: #835324; }
+.btn-main:hover, .btn:hover { background: #c17833; }
+.result {
+    font-size: 1.12em;
+    margin-top: 12px;
+    text-align: center;
+}
 .topics-list > div {
     display: flex;
     align-items: center;
     justify-content: space-between;
     font-size: 1em;
-}
-.result {
-    font-size: 1.17em;
-    margin-top: 24px;
-    text-align: center;
 }
 .qnav-row {
     display: flex;
@@ -77,13 +184,13 @@ h1, h2 { text-align: center; }
 }
 .qnav-page {
     font-size: 1em;
-    min-width: 34px;
-    height: 34px;
-    border-radius: 17px;
+    min-width: 30px;
+    height: 30px;
+    border-radius: 15px;
     background: #f3f4f6;
     color: #333;
     text-align: center;
-    line-height: 34px;
+    line-height: 30px;
     cursor: pointer;
     font-weight: bold;
     border: none;
@@ -93,13 +200,13 @@ h1, h2 { text-align: center; }
     margin-right: 2px;
 }
 .qnav-page.current {
-    background: #118387;
+    background: #d78739;
     color: #fff;
     font-weight: bold;
 }
 .qnav-page.done {
     background: #d1fae5;
-    color: #008080;
+    color: #b2652d;
 }
 .qnav-page.wrong {
     background: #ffeaea;
@@ -107,59 +214,31 @@ h1, h2 { text-align: center; }
     border: 1.5px solid #ffb6b6;
 }
 .qnav-dots {
-    font-size: 1.2em;
+    font-size: 1.16em;
     padding: 0 4px;
-    color: #888;
+    color: #a77e41;
     user-select: none;
 }
-.option b {
-    margin-right: 10px;
-    font-size: 1.08em;
-    min-width: 22px;
-    text-align: center;
-    display: inline-block;
-}
 @media (max-width: 600px) {
-    body {
-        max-width: 100vw;
-        font-size: 1em;
-        padding: 0;
-        margin: 0;
-        background: #f7f7f7;
-    }
-    .question-block {
-        padding: 12px 6px 18px 6px;
-        margin-top: 5vw;
-        border-radius: 10px;
-    }
-    .btn, .btn-main, .btn-gray {
-        width: 100%;
-        margin: 9px 0;
-        padding: 15px 0;
-        font-size: 1.06em;
-    }
-    .topics-list > div {
-        font-size: 0.98em;
-    }
-    .qnav-row {
-        gap: 4px;
-        margin-bottom: 10px;
-        padding-bottom: 3px;
-    }
-    .qnav-page, .qnav-page.current, .qnav-page.done, .qnav-page.wrong {
-        min-width: 28px;
-        height: 28px;
-        font-size: 0.99em;
+    .main-card {
+        min-width: 90vw;
+        padding: 13vw 3vw 18vw 3vw;
         border-radius: 14px;
-        line-height: 28px;
-        margin-right: 1.5px;
     }
+    .main-modes { width: 100%; padding: 13px 3vw 13px 3vw;}
+    .main-title { font-size: 1.22em; }
+    .main-version { left: 9vw; font-size: 1em;}
+    .question-block { max-width:98vw; padding: 11vw 2vw 7vw 2vw; }
     .option { font-size: 1em; padding: 10px 7px; }
+    .qnav-row { gap: 2px; }
+    .qnav-page, .qnav-page.current, .qnav-page.done, .qnav-page.wrong {
+        min-width: 26px; height: 26px; font-size: 0.93em; border-radius: 12px; line-height: 26px; margin-right: 1.5px;
+    }
+    .btn, .btn-main, .btn-gray { width: 100%; margin: 9px 0 0 0; font-size: 1em; padding: 15px 0;}
 }
     </style>
 </head>
 <body>
-    <h1>Тренажёр для юристов</h1>
     <div id="app"></div>
 <script>
 const topics = {{ topics|tojson }};
@@ -171,7 +250,7 @@ let mode = null;
 let errors = [];
 let sessionResult = {};
 let navHistory = [];
-let wrongAnswers = [];  // Массив с ошибками по вопросам текущей сессии
+let wrongAnswers = [];
 
 function getTopicStats() {
     return JSON.parse(localStorage.getItem("topicStats") || "{}");
@@ -194,13 +273,26 @@ function fetchQuestions() {
 function mainMenu(push=true) {
     if (push) navHistory.push("mainMenu");
     document.getElementById('app').innerHTML = `
-        <div class="question-block">
-            <h2>Выберите режим:</h2>
-            <button class="btn btn-main" onclick="trainingMenu()">Тренировка</button>
-            <button class="btn btn-main" onclick="startExam()">Экзамен</button>
-            <button class="btn btn-main" onclick="startErrors()" id="errors-btn">Работа над ошибками (${errors.length})</button>
-            <button class="btn btn-gray" style="float:right" onclick="if(confirm('Сбросить прогресс по темам?')){resetTopicStats();trainingMenu(false);}">Сбросить счётчики</button>
+    <div class="main-screen">
+    <div class="main-card">
+        <div class="main-icon">⚖️</div>
+        <div class="main-title">ЮРИДИЧЕСКИЙ<br>ТРЕНАЖЁР</div>
+        <div class="main-subtitle">Готовься к экзамену<br>по законам Кыргызской<br>Республики!</div>
+        <div class="main-modes">
+            <div class="modes-title">Режимы</div>
+            <button class="main-btn" onclick="trainingMenu()">
+                <span class="main-btn-icon">🧑‍⚖️</span> Тренировка
+            </button>
+            <button class="main-btn" onclick="startExam()">
+                <span class="main-btn-icon">✅</span> Экзамен
+            </button>
+            <button class="main-btn" onclick="startErrors()" id="errors-btn">
+                <span class="main-btn-icon">❌</span> Мои ошибки
+            </button>
         </div>
+        <div class="main-version">v1.0</div>
+    </div>
+    </div>
     `;
     document.getElementById('errors-btn').disabled = errors.length === 0;
 }
@@ -219,7 +311,7 @@ function trainingMenu(push=true) {
     }).join('');
     document.getElementById('app').innerHTML = `
         <div class="question-block">
-            <h2>Тренировка — Выберите темы</h2>
+            <h2>Тренировка — выберите темы</h2>
             <div class="topics-list">${topicsHtml}</div>
             <div style="margin-top:10px">
                 <label><input type="radio" name="order" value="sequential" checked> По порядку</label>
@@ -388,7 +480,7 @@ function showResult(push=true) {
     if(mode === "exam" || mode === "train") {
         errors = [];
         currentQuestions.forEach((q, idx) => {
-            let correctIdx = q.options.findIndex(opt => opt.startswith('+'));
+            let correctIdx = q.options.findIndex(opt => opt.startsWith('+'));
             if(userAnswers[idx] !== correctIdx) {
                 let id = allQuestions.findIndex(x => x.question === q.question && x.topic === q.topic);
                 if(!errors.includes(allQuestions[id])) errors.push(allQuestions[id]);
