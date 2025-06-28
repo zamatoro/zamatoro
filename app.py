@@ -161,7 +161,10 @@ h1, h2 { text-align: center; }
     border-radius: 14px;
     padding: 8px 0 8px 0;
     font-size: 1.19em;
+    cursor: pointer;
+    transition: background 0.14s;
 }
+.train-topic-row:hover { background: #ffecbc24; }
 .train-topic-row:not(:last-child) { border-bottom: 1px solid #e1af82a8;}
 .train-topic-name {
     flex: 1;
@@ -297,7 +300,8 @@ function trainingMenu(push=true) {
     let topicsHtml = topics.map((t,i)=>{
         let total = allQuestions.filter(q=>q.topic===t).length;
         let correct = topicStats[t] || 0;
-        return `<div class="train-topic-row">
+        // Вся строка кликабельна, тренировка только по теме!
+        return `<div class="train-topic-row" style="cursor:pointer" onclick="startTrainOneTopic('${encodeURIComponent(t)}')">
                 <span class="train-topic-name">${t}</span>
                 <span class="train-topic-progress">${correct} / ${total}</span>
             </div>`;
@@ -332,7 +336,19 @@ function trainingMenu(push=true) {
     `;
 }
 
-// --- (ОСТАЛЬНЫЕ функции теста, экзамена и ошибок не включены в этот короткий блок, но остаются как в вашей логике) ---
+// --- Функция старта тренировки по одной теме ---
+function startTrainOneTopic(topicName) {
+    topicName = decodeURIComponent(topicName);
+    let qs = allQuestions.filter(q => q.topic === topicName);
+    mode = "train";
+    currentQuestions = qs;
+    userAnswers = Array(qs.length).fill(null);
+    currentIdx = 0;
+    wrongAnswers = Array(qs.length).fill(false);
+    showQuestion(true);
+}
+
+// --- остальные функции экзамена/ошибок/опроса — как в вашей логике! ---
 
 window.onload = function() {
     fetchQuestions();
