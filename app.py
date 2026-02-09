@@ -299,7 +299,7 @@ let wrongAnswers = [];
 let examTimer = null;
 let examEndTime = null;
 let examFinished = false; 
-let tempSelection = []; // Временное хранение выбранных ответов
+let tempSelection = [];
 
 function getTopicStats() {
     return JSON.parse(localStorage.getItem("topicStats") || "{}");
@@ -366,7 +366,7 @@ function mainMenu(push=true) {
                 <span class="main-btn-icon">❌</span> Мои ошибки
             </button>
         </div>
-        <div class="main-version">v1.3</div>
+        <div class="main-version">v1.6</div>
     </div>
     </div>
     `;
@@ -423,13 +423,69 @@ function startTrain() {
 
 function startExam() {
     fetch("/questions").then(r => r.json()).then(data => {
-        let qs = data.sort(()=>Math.random()-0.5).slice(0, Math.min(NUM_EXAM_QUESTIONS, data.length));
+        // Группировка вопросов по темам
+        let questionsByTopic = {};
+        data.forEach(q => {
+            if(!questionsByTopic[q.topic]) questionsByTopic[q.topic] = [];
+            questionsByTopic[q.topic].push(q);
+        });
+        
+        let examQs = [];
+        let remainingPool = [];
+        
+        // 1. Выборка согласно логике (6-8 для больших, 1-4 для малых)
+        for(let t in questionsByTopic) {
+             let qs = questionsByTopic[t];
+             // Перемешиваем вопросы внутри темы
+             qs = qs.sort(() => Math.random() - 0.5);
+             
+             let count = qs.length;
+             let take = 0;
+             
+             if (count > 140) {
+                 // Большая тема: берем от 6 до 8
+                 take = Math.floor(Math.random() * (8 - 6 + 1)) + 6;
+             } else {
+                 // Маленькая тема (<=140): берем от 1 до 4
+                 take = Math.floor(Math.random() * (4 - 1 + 1)) + 1;
+             }
+             
+             // Защита: нельзя взять больше, чем есть
+             take = Math.min(take, count);
+             
+             // Добавляем выбранные
+             for(let i=0; i<take; i++) examQs.push(qs[i]);
+             // Остальные кидаем в общий котел на случай добора
+             for(let i=take; i<count; i++) remainingPool.push(qs[i]);
+        }
+        
+        // 2. Добиваем до 120, если набралось меньше (из общего котла)
+        remainingPool = remainingPool.sort(() => Math.random() - 0.5);
+        let needed = NUM_EXAM_QUESTIONS - examQs.length;
+        
+        if (needed > 0) {
+            if (remainingPool.length >= needed) {
+                examQs = examQs.concat(remainingPool.slice(0, needed));
+            } else {
+                // Если вдруг вопросов вообще не хватает (маловероятно)
+                examQs = examQs.concat(remainingPool);
+            }
+        } else if (needed < 0) {
+            // Если вдруг набрали больше 120 (очень много больших тем), подрезаем
+            // Но лучше перемешать перед подрезкой
+            examQs = examQs.sort(() => Math.random() - 0.5);
+            examQs = examQs.slice(0, NUM_EXAM_QUESTIONS);
+        }
+        
+        // 3. Финальное перемешивание всего списка вопросов экзамена
+        examQs = examQs.sort(() => Math.random() - 0.5);
+
         mode = "exam"; 
         examFinished = false; 
-        currentQuestions = prepareQuestions(qs); 
-        userAnswers = Array(qs.length).fill(null); 
+        currentQuestions = prepareQuestions(examQs); 
+        userAnswers = Array(examQs.length).fill(null); 
         currentIdx = 0;
-        wrongAnswers = Array(qs.length).fill(false);
+        wrongAnswers = Array(examQs.length).fill(false);
         
         examEndTime = Date.now() + 2 * 60 * 60 * 1000;
         startTimer();
@@ -504,7 +560,6 @@ function showQuestion(push=true) {
         }
     }
 
-    // Определяем, показывать ли результат
     let canShowResult = true;
     if (mode === 'exam' && !examFinished) {
         canShowResult = false;
@@ -689,7 +744,7 @@ function showResult(push=true) {
     let msg = "";
     
     if(mode === "exam") {
-        msg = percent >= 85 ? "<h3 style='color:green'>Экзамен сдан!</h3>" : "<h3 style='color:red'>Экзамен не сдан.</h3><div>Необходимо минимум 85%.</div>";
+        msg = percent >= 70 ? "<h3 style='color:green'>Экзамен сдан!</h3>" : "<h3 style='color:red'>Экзамен не сдан.</h3><div>Необходимо минимум 70% (84 правильных ответа).</div>";
     } else if(mode === "errors") {
         msg = "<b>Работа над ошибками завершена!</b>";
         currentQuestions.forEach((q, idx) => {
